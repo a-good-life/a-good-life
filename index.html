@@ -1,32 +1,60 @@
-<!DOCTYPE html>
-<html>
-  <head>
-      <meta charset="utf-8">
-      <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-      <title>hamishl - {{ page.title }}</title>
-      <meta name="viewport" content="width=device-width">
-  </head>
-  <body>
+---
+layout: default
+title: A Good Life
+---
+<!--<div class="homebg"></div>-->
+<!--<div class="title">
+	hamishl
+</div>-->
+<div class="title">
+  <div id="filters" class="button-group">  
+    <button class="button" data-filter=".mindset"> </button>
+  </div>
+  
+  <div class="button-id">
+  </div>
+  
+  <div id="sorts" class="button-group">  
+    <button class="button" data-sort-by="title"> </button>
+  </div>
+</div>
 
-<h1 id="bigOne"></h1>
+<div class="grid">
+{% assign goals = site.data.goals | sort: 'priority' %}
+{% assign tasks = site.data.tasks | sort: 'completion' | reverse %}
 
-<script src="https://www.gstatic.com/firebasejs/5.7.2/firebase.js"></script>
-<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyC7PKNmoMfUE2OiP_cKuw0Q-qmuBS8qZzM",
-    authDomain: "a-good-life-hl.firebaseapp.com",
-    databaseURL: "https://a-good-life-hl.firebaseio.com",
-    projectId: "a-good-life-hl",
-    storageBucket: "a-good-life-hl.appspot.com",
-    messagingSenderId: "900664989462"
-  };
-  firebase.initializeApp(config);
+<div class="grid-sizer"></div>
+{% for goals in goals %}
+  	<div class="card {{ goals.category }}">
+      <h3 class="card-category {{ goals.category }}">{{ goals.category }}</h3>
+    		<h1 class="card-title">{{ goals.goal }}</h1>
+    		<div class="card-text">
+          {% for tasks in tasks %}
+            {% if tasks.category == goals.category %}
+              <div class="task c{{ tasks.completion }}">
 
-  var bigOne = document.getElementById('bigOne');
-  var dbRef = firebase.database().ref().child('text');
-  dbRef.on('value', snap => bigOne.innerText = snap.val());
-</script>
+                <div class="task-icon">
+                  {% if tasks.completion == 100 %}
+                  <i class="material-icons md">done</i>
+                  {% endif %}
+                </div>
 
-  </body>
-</html>
+                <div class="task-right">
+                  
+                  <div contenteditable="true" class="task-text">{{ tasks.task }}</div>
+
+                  <div class="task-bar-bg">
+                    <div class="task-bar" style="width: calc(0% + 1 * {{  tasks.completion }}%)">
+                    </div>
+                  </div>
+
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+  	</div>
+
+{% endfor %}
+</div>
+
